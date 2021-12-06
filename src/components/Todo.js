@@ -8,11 +8,11 @@ import {
   ListItem,
   ListItemText,
   Input,
-  Divider,
   } from '@material-ui/core';
   import Paper from '@mui/material/Paper';
   import FavoriteIcon from '@mui/icons-material/Favorite';
   import BookmarksIcon from '@mui/icons-material/Bookmarks';
+  import Typography from "@mui/material/Typography";
 
 export default function MainContainer ()  {
   const [createissue, setCreateissue] = useState("");
@@ -51,12 +51,11 @@ export default function MainContainer ()  {
 
   return (
     <body>
-    <header>
-      <h1>掲示板</h1>
-    </header>
-    <div>
     <React.Fragment>
-      <Container component='main' maxWidth='xs'>
+      <Container  maxWidth='xs'>
+      <h1>
+      3 Chanell
+      </h1>
         <CssBaseline/>
           <form onSubmit={createIssue}>
             <Input
@@ -69,7 +68,7 @@ export default function MainContainer ()  {
             <Button
               type="submit"
               variant='contained'
-              color='primary'
+              color='text'
             >
                 投稿
             </Button>
@@ -79,26 +78,24 @@ export default function MainContainer ()  {
           component='ul'
           >
             {issues.map(item => (
-              <ListItem key={item.id} component='li' >
-              <paper>
-                <ListItemText>
+                <Paper >
+                <Typography color="text.secondary">
                   {item.id}
                   {item.name}
                   {item.created_at}
+                  </Typography>
+                  <Typography component="div">
                   {item.content}
+                  </Typography>
                   <div>
                   <FavoriteIcon/>
                   <BookmarksIcon/>
                   </div>
-                  <Divider />
-                </ListItemText>
-                </paper>
-              </ListItem>
+                </Paper>
             ))}
           </List>
       </Container>
     </React.Fragment>
-    </div>
     <footer>
         Horizon
       </footer>

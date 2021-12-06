@@ -10,6 +10,9 @@ import {
   Input,
   Divider,
   } from '@material-ui/core';
+  import Paper from '@mui/material/Paper';
+  import FavoriteIcon from '@mui/icons-material/Favorite';
+  import BookmarksIcon from '@mui/icons-material/Bookmarks';
 
 export default function MainContainer ()  {
   const [createissue, setCreateissue] = useState("");
@@ -77,13 +80,19 @@ export default function MainContainer ()  {
           >
             {issues.map(item => (
               <ListItem key={item.id} component='li' >
+              <paper>
                 <ListItemText>
                   {item.id}
                   {item.name}
                   {item.created_at}
                   {item.content}
+                  <div>
+                  <FavoriteIcon/>
+                  <BookmarksIcon/>
+                  </div>
                   <Divider />
                 </ListItemText>
+                </paper>
               </ListItem>
             ))}
           </List>

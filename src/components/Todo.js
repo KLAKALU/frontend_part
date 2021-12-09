@@ -17,7 +17,6 @@ export default function MainContainer ()  {
   const [issues, setIssues] = useState([]);
 
   const createIssue = (event) => {
-    console.log("イベント発火")
     axios.post('https://thawing-wildwood-48291.herokuapp.com/sured',
       {
         content: createissue

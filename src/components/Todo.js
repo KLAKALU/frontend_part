@@ -5,8 +5,6 @@ import {
   Container,
   CssBaseline,
   List,
-  ListItem,
-  ListItemText,
   Input,
   } from '@material-ui/core';
   import Paper from '@mui/material/Paper';
@@ -96,9 +94,6 @@ export default function MainContainer ()  {
           </List>
       </Container>
     </React.Fragment>
-    <footer>
-        Horizon
-      </footer>
     </body>
   );
 }

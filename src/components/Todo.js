@@ -81,14 +81,14 @@ export default function MainContainer ()  {
                   {item.id}
                   {item.name}
                   {item.created_at}
-                  </Typography>
-                  <Typography component="div">
+                </Typography>
+                <Typography component="div">
                   {item.content}
-                  </Typography>
-                  <div>
+                </Typography>
+                <div>
                   <FavoriteIcon/>
                   <BookmarksIcon/>
-                  </div>
+                </div>
                 </Paper>
             ))}
           </List>

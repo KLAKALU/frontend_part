@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { HeartFill } from 'react-bootstrap-icons';
 import axios from 'axios';
 import {
   Button,
@@ -8,24 +9,24 @@ import {
   Input,
   } from '@material-ui/core';
   import Paper from '@mui/material/Paper';
-  import FavoriteIcon from '@mui/icons-material/Favorite';
-  import BookmarksIcon from '@mui/icons-material/Bookmarks';
-  import Typography from "@mui/material/Typography";
+  import Typography from '@mui/material/Typography'
 
-export default function MainContainer ()  {
+function App ()  {
   const [createissue, setCreateissue] = useState("");
-  const [issues, setIssues] = useState([]);
-
+  const [resu, setResu] = useState([]);
+  const apiUrl = "http://localhost:3000/sures";
   const createIssue = (event) => {
-    axios.post('https://thawing-wildwood-48291.herokuapp.com/sured',
+    axios.post(apiUrl,
       {
         content: createissue
       }
-    ).then(response => {
+      ).then(response => {
       console.log("registration response", response.data)
-      setIssues([...issues, {
-        id: response.data.id,
-        content: response.data.content
+      setResu([...resu, {
+        idnomber: response.data.idnomber,
+        content: response.data.content,
+        time: response.data.time,
+        like: response.data.like
       }])
       resetTextField()
     })
@@ -34,10 +35,11 @@ export default function MainContainer ()  {
 
   useEffect(()  =>  {
     async function fetchData()  {
-      const result = await axios.get('https://thawing-wildwood-48291.herokuapp.com/sured',)
+      const result = await axios.get(apiUrl)
         console.log(result)
         console.log(result.data)
-        setIssues(result.data);
+        const foo = [{idnomber: 1, like: null},{idnomber:2, like: null}]
+        setResu(foo);
       }
       fetchData();
       }, []);
@@ -46,13 +48,42 @@ export default function MainContainer ()  {
     setCreateissue('')
   }
 
+  const updateLike = async (id) => {
+    let newValue = resu
+    console.log(newValue[id-1]);
+    if (newValue[id-1].bool == null) {
+      axios.patch(apiUrl+`/${id}`,
+      {
+        like: 1
+      }
+      );
+      newValue[id-1].like += 1;
+      console.log("like count " + newValue[id-1].like)
+      newValue[id-1].bool = 1;
+      console.log("setbool 1")
+      console.log(newValue[id-1].bool)
+      setResu(newValue);
+    } else {
+      axios.patch(apiUrl+`/${id}`,
+      {
+        like: 2
+      }
+      );
+      newValue[id-1].like -= 1;
+      newValue[id-1].bool = null;
+      console.log("setbool null")
+      console.log(newValue[id-1].bool)
+      setResu(newValue);
+    }
+  }
+
   return (
     <body>
     <React.Fragment>
       <Container  maxWidth='xs'>
-      <h1>
-      3 Chanell
-      </h1>
+      <Typography style={{fontFamily: 'Monoton', textAlign:'center',fontSize: '30px'}}>
+      3 Channel
+      </Typography>
         <CssBaseline/>
           <form onSubmit={createIssue}>
             <Input
@@ -71,24 +102,25 @@ export default function MainContainer ()  {
             </Button>
           </form>
           <List
-            style={{marginTop: '48px'}}
           component='ul'
           >
-            {issues.map(item => (
-                <Paper >
-                <Typography color="text.secondary">
-                  {item.id}
-                  {item.name}
-                  {item.created_at}
+            {resu.map(item => (
+              <Paper style={{marginBottom: '9px'}}>
+              <div style={{display:"flex"}}>
+                <Typography style={{fontSize: '17px', paddingRight: '9px', paddingLeft: '5px'}}>
+                  {item.idnomber}
+                  </Typography>
+                  <Typography color="text.secondary" style={{fontSize: '14px'}}>
+                  {item.time}
                 </Typography>
+              </div>
                 <Typography component="div">
                   {item.content}
+                  {console.log("bool="+item.bool)}
+                  <HeartFill color={item.bool ? 'red' : 'gray'} size={16} onClick={() => updateLike(item.idnomber)}/>
+                  {item.like}
                 </Typography>
-                <div>
-                  <FavoriteIcon/>
-                  <BookmarksIcon/>
-                </div>
-                </Paper>
+              </Paper>
             ))}
           </List>
       </Container>
@@ -96,3 +128,4 @@ export default function MainContainer ()  {
     </body>
   );
 }
+export default App;

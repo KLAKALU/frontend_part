@@ -12,13 +12,13 @@ import {
   import Typography from '@mui/material/Typography'
 
 function App ()  {
-  const [createissue, setCreateissue] = useState("");
+  const [createresu, setCreateresu] = useState("");
   const [resu, setResu] = useState([]);
   const apiUrl = "http://localhost:3000/sures";
-  const createIssue = (event) => {
+  const createresponse = (event) => {
     axios.post(apiUrl,
       {
-        content: createissue
+        content: createresu
       }
       ).then(response => {
       console.log("registration response", response.data)
@@ -35,63 +35,60 @@ function App ()  {
 
   useEffect(()  =>  {
     async function fetchData()  {
-      const result = await axios.get(apiUrl)
-        console.log(result)
-        console.log(result.data)
-        const foo = [{idnomber: 1, like: null},{idnomber:2, like: null}]
-        setResu(foo);
+      const result = await axios.get(apiUrl);
+        console.log(result);
+        console.log(result.data);
+        const foo = [{idnomber: 1, like: 0, bool: false},{idnomber:2, like: 0,bool:false}];
+        //setResu(foo);
+        setResu(result.data)
       }
       fetchData();
       }, []);
 
   const resetTextField = () => {
-    setCreateissue('')
+    setCreateresu('')
   }
 
   const updateLike = async (id) => {
-    let newValue = resu
-    console.log(newValue[id-1]);
-    if (newValue[id-1].bool == null) {
-      axios.patch(apiUrl+`/${id}`,
-      {
-        like: 1
+    const newValue = resu.map(item => {
+      if(item.idnomber === id){
+        if(item.bool == null){
+          axios.patch(apiUrl+`/${id}`,
+          {
+            like: 1
+          }
+          );
+          item.like += 1;
+          item.bool = 1
+        }else {
+          axios.patch(apiUrl+`/${id}`,
+          {
+            like: 2
+          }
+          );
+          item.like -= 1;
+          item.bool = null
+        }
       }
-      );
-      newValue[id-1].like += 1;
-      console.log("like count " + newValue[id-1].like)
-      newValue[id-1].bool = 1;
-      console.log("setbool 1")
-      console.log(newValue[id-1].bool)
-      setResu(newValue);
-    } else {
-      axios.patch(apiUrl+`/${id}`,
-      {
-        like: 2
-      }
-      );
-      newValue[id-1].like -= 1;
-      newValue[id-1].bool = null;
-      console.log("setbool null")
-      console.log(newValue[id-1].bool)
-      setResu(newValue);
-    }
-  }
+      return item;
+    });
+    setResu(newValue);
+  };
 
   return (
-    <body>
     <React.Fragment>
       <Container  maxWidth='xs'>
       <Typography style={{fontFamily: 'Monoton', textAlign:'center',fontSize: '30px'}}>
       3 Channel
       </Typography>
         <CssBaseline/>
-          <form onSubmit={createIssue}>
+          <form onSubmit={createresponse}>
             <Input
               type="text"
               name="content"
-              value={createissue}
+              value={createresu}
               placeholder="Enter text"
-              onChange={event => setCreateissue(event.target.value)}
+              onChange={event => setCreateresu(event.target.value)}
             />
             <Button
               type="submit"
@@ -105,7 +102,7 @@ function App ()  {
           component='ul'
           >
             {resu.map(item => (
-              <Paper style={{marginBottom: '9px'}}>
+              <Paper key = {item.idnomber} style={{marginBottom: '9px'}}>
               <div style={{display:"flex"}}>
                 <Typography style={{fontSize: '17px', paddingRight: '9px', paddingLeft: '5px'}}>
                   {item.idnomber}
@@ -116,7 +113,6 @@ function App ()  {
               </div>
                 <Typography component="div">
                   {item.content}
-                  {console.log("bool="+item.bool)}
                   <HeartFill color={item.bool ? 'red' : 'gray'} size={16} onClick={() => updateLike(item.idnomber)}/>
                   {item.like}
                 </Typography>
@@ -125,7 +121,6 @@ function App ()  {
           </List>
       </Container>
     </React.Fragment>
-    </body>
   );
 }
 export default App;

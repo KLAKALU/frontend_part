@@ -14,7 +14,7 @@ import {
 function App ()  {
   const [createresu, setCreateresu] = useState("");
   const [resu, setResu] = useState([]);
-  const apiUrl = "http://localhost:3000/sures";
+  const apiUrl = "https://bbsbackendapp.herokuapp.com/sures";
   const createresponse = (event) => {
     axios.post(apiUrl,
       {
